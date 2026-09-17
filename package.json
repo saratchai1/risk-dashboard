@@ -1,9 +1,10 @@
 {
   "name": "risk-dashboard",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "dev": "python3 -m http.server 4173",
-    "check": "node --check app.js"
+    "check": "node --check app.js",
+    "test": "node --check app.js && python3 scripts/smoke_test.py"
   }
 }
