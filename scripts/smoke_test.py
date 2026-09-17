@@ -1,19 +1,30 @@
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-required = ["index.html", "styles.css", "app.js", "README.md"]
+required = [
+    "index.html",
+    "styles.css",
+    "enhancements.css",
+    "app.js",
+    "enhancements.js",
+    "README.md",
+]
 missing = [name for name in required if not (root / name).exists()]
 if missing:
     raise SystemExit(f"missing files: {', '.join(missing)}")
 
 html = (root / "index.html").read_text(encoding="utf-8")
-js = (root / "app.js").read_text(encoding="utf-8")
-css = (root / "styles.css").read_text(encoding="utf-8")
+base_js = (root / "app.js").read_text(encoding="utf-8")
+enhanced_js = (root / "enhancements.js").read_text(encoding="utf-8")
+css = (root / "styles.css").read_text(encoding="utf-8") + (root / "enhancements.css").read_text(encoding="utf-8")
+js = base_js + enhanced_js
 
 checks = {
     "app mount": 'id="app"' in html,
-    "script": 'src="app.js"' in html,
-    "stylesheet": 'href="styles.css"' in html,
+    "base script": 'src="app.js"' in html,
+    "enhancement script": 'src="enhancements.js"' in html,
+    "base stylesheet": 'href="styles.css"' in html,
+    "enhancement stylesheet": 'href="enhancements.css"' in html,
     "executive overview": "Executive Overview" in js,
     "risk center": "Risk Center" in js,
     "decision center": "Decision Center" in js,
@@ -21,6 +32,8 @@ checks = {
     "mrv readiness": "MRV Readiness" in js,
     "executive brief": "Executive Brief" in js,
     "assumption warning": "ASSUMED DATA" in js,
+    "csv export": "downloadCSV" in enhanced_js,
+    "local persistence": "localStorage" in enhanced_js,
     "drawer styles": ".risk-drawer" in css,
     "print styles": "@media print" in css,
 }
